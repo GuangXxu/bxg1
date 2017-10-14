@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>学IT - 后台管理系统</title>
+    <?php include '/views/common/css.html'?>
+</head>
+<body>
+    <!-- 登录 -->
+    <div class="login">
+        <div class="login-wrap">
+            <div class="avatar">
+                <img src="/views/public/uploads/monkey.png" class="img-circle" alt="">
+            </div>
+            <form action="" id="formLogin" class="col-md-offset-1 col-md-10">
+                <div class="input-group input-group-lg">
+                    <span class="input-group-addon">
+                        <i class="fa fa-user"></i>
+                    </span>
+                    <input type="text" name="tc_name" value="前端学院" class="form-control" placeholder="用户名">
+                </div>
+                <div class="input-group input-group-lg">
+                    <span class="input-group-addon">
+                        <i class="fa fa-key"></i>
+                    </span>
+                    <input type="password" name="tc_pass" value="123456" class="form-control" placeholder="密码">
+                </div>
+                <button type="submit" id="btn" class="btn btn-lg btn-primary btn-block">登 录</button>
+            </form>
+        </div>
+    </div>
+    
+    <?php include '/views/common/script.html'?>
+</body>
+</html>
+<script>
+    //使用事件委托
+    $('#formLogin').on('click', '#btn', function(){
+        //表单序列化
+        var data = $('#formLogin').serializeArray();
+       
+        // var data = $(this).serializeArray();
+        //发送ajax请求
+        $.ajax({
+            //请求的路径
+            url:'/api/login',
+            //请求的方式
+            type:'post',
+            //传递的参数
+            data:data,
+            //请求成功的情况下
+            success:function(info){
+                if(info.code == 200){
+                    alert('登陆成功');
+                    //借助于$.cookie 将用户信息传输到公共模块的页面中，
+                    //但只能通过字符串的形式传输，
+                    //将info.result通过JSON.stringify()方法转成字符串；
+                    $.cookie('userInfo',JSON.stringify(info.result));
+                    //请求成功后 实现页面跳转，跳转到主页面
+                    window.location.href = "/index";
+                }
+            },
+            //请求失败的情况下
+            error:function(){
+                alert('登陆失败');
+            }
+        });
+        return false;
+    });
+</script>
